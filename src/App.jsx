@@ -10,14 +10,16 @@ import Settings from './pages/Settings'
 import PublicView from './pages/PublicView'
 import WelcomeModal from './components/WelcomeModal'
 import { ChatProvider } from './context/ChatContext'
+import { ShipmentsProvider } from './context/ShipmentsContext'
 
 export default function App() {
   const [showWelcome, setShowWelcome] = useState(true)
 
   return (
-    <ChatProvider>
-      {showWelcome && <WelcomeModal onClose={() => setShowWelcome(false)} />}
-      <Routes>
+    <ShipmentsProvider>
+      <ChatProvider>
+        {showWelcome && <WelcomeModal onClose={() => setShowWelcome(false)} />}
+        <Routes>
         <Route path="/s/:id" element={<PublicView />} />
         <Route element={<Layout />}>
           <Route path="/" element={<Dashboard />} />
@@ -26,8 +28,9 @@ export default function App() {
           <Route path="/plan" element={<Plans />} />
           <Route path="/notificaciones" element={<Notifications />} />
           <Route path="/ajustes" element={<Settings />} />
-        </Route>
-      </Routes>
-    </ChatProvider>
+          </Route>
+        </Routes>
+      </ChatProvider>
+    </ShipmentsProvider>
   )
 }

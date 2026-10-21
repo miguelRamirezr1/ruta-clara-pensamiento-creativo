@@ -1,11 +1,14 @@
 import { Link, useParams } from 'react-router-dom'
-import { shipments, carriers } from '../data/mockData'
+import { resolveCarrier } from '../data/mockData'
+import { useShipments } from '../context/ShipmentsContext'
 import StatusBadge from '../components/StatusBadge'
 import Timeline from '../components/Timeline'
 
 export default function PublicView() {
   const { id } = useParams()
+  const { shipments } = useShipments()
   const shipment = shipments.find((s) => s.id.toLowerCase() === id?.toLowerCase())
+  const carrier = shipment ? resolveCarrier(shipment) : null
 
   return (
     <div className="min-h-screen bg-paper flex flex-col">
@@ -30,9 +33,9 @@ export default function PublicView() {
               <StatusBadge status={shipment.status} />
               <span
                 className="text-xs font-medium px-2 py-0.5 rounded-md"
-                style={{ backgroundColor: `${carriers[shipment.carrier].color}1A`, color: carriers[shipment.carrier].color }}
+                style={{ backgroundColor: `${carrier.color}1A`, color: carrier.color }}
               >
-                {carriers[shipment.carrier].name}
+                {carrier.name}
               </span>
               <span className="font-mono text-xs text-muted">{shipment.id}</span>
             </div>

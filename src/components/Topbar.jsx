@@ -1,5 +1,6 @@
 import { Link, useLocation, useParams } from 'react-router-dom'
-import { notifications, shipments } from '../data/mockData'
+import { notifications } from '../data/mockData'
+import { useShipments } from '../context/ShipmentsContext'
 
 const TITLES = {
   '/': { title: 'Envíos', subtitle: 'Todo lo que necesitas saber sobre tus paquetes' },
@@ -12,6 +13,7 @@ const TITLES = {
 export default function Topbar({ onMenuClick }) {
   const location = useLocation()
   const params = useParams()
+  const { shipments } = useShipments()
   const unreadCount = notifications.filter((n) => n.unread).length
 
   let title = TITLES[location.pathname]?.title

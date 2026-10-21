@@ -1,9 +1,15 @@
 import { Link } from 'react-router-dom'
 import StatusBadge from './StatusBadge'
-import { carriers } from '../data/mockData'
+import { resolveCarrier } from '../data/mockData'
+
+function truncate(text, max = 90) {
+  if (!text) return ''
+  return text.length > max ? `${text.slice(0, max).trimEnd()}…` : text
+}
 
 export default function ShipmentCard({ shipment }) {
-  const carrier = carriers[shipment.carrier]
+  const carrier = resolveCarrier(shipment)
+  const needsAction = shipment.nextSteps?.some((s) => s.ownerAction && !s.done)
 
   return (
     <Link
@@ -25,24 +31,32 @@ export default function ShipmentCard({ shipment }) {
         {shipment.product}
       </p>
 
-      <div className="mt-4 pt-4 border-t border-line">
+      <div className="mt-4 pt-4 border-t border-line space-y-2">
         {shipment.status === 'retenido' && (
-          <p className="text-sm text-ink-700">
-            {shipment.causeKnown ? (
-              <>
-                <span className="font-medium text-signal-600">Causa: </span>
-                {shipment.causeSimple.length > 70
-                  ? shipment.cause
-                  : shipment.causeSimple}
-              </>
-            ) : (
-              <span className="text-amber-600 font-medium">Averiguando la causa…</span>
+          <>
+            <p className="text-sm text-ink-700">
+              {shipment.causeKnown ? (
+                <>
+                  <span className="font-medium text-signal-600">Causa: </span>
+                  {truncate(shipment.causeSimple)}
+                </>
+              ) : (
+                <span className="text-amber-600 font-medium">Averiguando la causa…</span>
+              )}
+            </p>
+            {shipment.etaMin != null && (
+              <p className="text-xs text-muted">Estimado: {shipment.etaMin}–{shipment.etaMax} días</p>
             )}
-          </p>
+            {needsAction && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-signal-100 text-signal-600 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide">
+                Requiere tu acción
+              </span>
+            )}
+          </>
         )}
         {shipment.status === 'transito' && (
           <p className="text-sm text-teal-600 font-medium">
-            Llega en {shipment.etaMin}–{shipment.etaMax} días
+            {shipment.resolved ? 'Liberado · ' : ''}Llega en {shipment.etaMin}–{shipment.etaMax} días
           </p>
         )}
         {shipment.status === 'entregado' && (

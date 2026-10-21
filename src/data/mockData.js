@@ -64,6 +64,17 @@ export const carriers = {
   fedex: { name: 'FedEx', color: '#37507D' },
 }
 
+// Devuelve la transportadora de un envío, incluidas las "Otra" escritas a mano
+// (que no están en el catálogo `carriers`).
+export function resolveCarrier(shipment) {
+  return (
+    carriers[shipment.carrier] ?? {
+      name: shipment.carrierName || 'Otra transportadora',
+      color: '#667085',
+    }
+  )
+}
+
 // Estados: retenido | transito | entregado
 export const shipments = [
   {
@@ -85,7 +96,7 @@ export const shipments = [
     nextSteps: [
       { done: true, label: 'La transportadora notificó la retención' },
       { done: true, label: 'Se identificó la causa exacta' },
-      { done: false, label: 'Enviar factura corregida a la DIAN (te corresponde a ti)' },
+      { done: false, label: 'Enviar la factura corregida a la DIAN', ownerAction: true },
       { done: false, label: 'La DIAN revisa el documento (1–2 días hábiles)' },
       { done: false, label: 'Envío liberado y despachado' },
     ],
@@ -167,6 +178,7 @@ export const notifications = [
     id: 1,
     unread: true,
     type: 'signal',
+    shipmentId: 'SV-88213904',
     title: 'Nueva causa identificada',
     body: 'SV-88213904: la retención es por diferencia en la factura comercial.',
     time: 'hace 2 h',
@@ -175,6 +187,7 @@ export const notifications = [
     id: 2,
     unread: true,
     type: 'amber',
+    shipmentId: 'SV-88213904',
     title: 'Acción pendiente de tu parte',
     body: 'SV-88213904: debes enviar la factura corregida para continuar el trámite.',
     time: 'hace 2 h',
@@ -183,6 +196,7 @@ export const notifications = [
     id: 3,
     unread: true,
     type: 'signal',
+    shipmentId: 'IR-10938211',
     title: 'Envío retenido en aduana',
     body: 'IR-10938211 quedó retenido en Barranquilla. Estamos averiguando la causa.',
     time: 'hace 19 h',
@@ -191,6 +205,7 @@ export const notifications = [
     id: 4,
     unread: false,
     type: 'teal',
+    shipmentId: 'DHL-77201',
     title: 'Envío entregado',
     body: 'DHL-77201 llegó a su destino en Medellín.',
     time: 'hace 4 días',

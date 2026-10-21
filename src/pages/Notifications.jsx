@@ -43,9 +43,10 @@ export default function Notifications() {
             const tone = TONE_STYLES[n.type] ?? TONE_STYLES.teal
             return (
               <li key={n.id}>
-                <button
+                <Link
+                  to={n.shipmentId ? `/envio/${n.shipmentId}` : '/'}
                   onClick={() => markRead(n.id)}
-                  className={`w-full text-left rounded-xl border p-4 flex items-start gap-3.5 transition-colors ${
+                  className={`w-full text-left rounded-xl border p-4 flex items-start gap-3.5 transition-colors hover:border-ink-300 ${
                     n.unread ? 'border-line bg-card' : 'border-line/60 bg-card/60'
                   }`}
                 >
@@ -55,7 +56,10 @@ export default function Notifications() {
                     <p className="text-sm text-muted mt-0.5">{n.body}</p>
                     <p className="text-xs text-muted mt-1.5">{n.time}</p>
                   </div>
-                </button>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4 mt-0.5 shrink-0 text-muted">
+                    <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </Link>
               </li>
             )
           })}
