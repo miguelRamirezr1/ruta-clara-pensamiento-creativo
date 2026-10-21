@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-paper text-ink-900 font-sans;
+  }
+  ::selection {
+    @apply bg-signal-100 text-ink-900;
+  }
+  :focus-visible {
+    outline: 2px solid #14213D;
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #D9DFEA;
+    border-radius: 999px;
+  }
+}
